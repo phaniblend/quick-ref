@@ -452,11 +452,224 @@
 
   </div>
 
+
+  <!-- DESTRUCTURING -->
+  <p class="section-title">Destructuring & Spread Tricks</p>
+
+  <!-- shared stub -->
+  <div class="note">
+    💡 <strong>All examples below use this stub:</strong><br><br>
+    <span style="font-family:'JetBrains Mono',monospace; font-size:0.8rem; color:var(--accent4)">
+      const user = {<br>
+      &nbsp;&nbsp;id: 1, name: <span style="color:#c3e88d">'Phani'</span>, email: <span style="color:#c3e88d">'<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5929313837301929313837302a3c2d2d207730373f36">[email&#160;protected]</a>'</span>,<br>
+      &nbsp;&nbsp;password: <span style="color:#c3e88d">'supersecret123'</span>, role: <span style="color:#c3e88d">'admin'</span>,<br>
+      &nbsp;&nbsp;address: { city: <span style="color:#c3e88d">'Dallas'</span>, zip: <span style="color:#c3e88d">'75001'</span> }<br>
+      };<br><br>
+      const items = [10, 20, 30, 40];
+    </span>
+  </div>
+
+  <div class="cards">
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-label" style="color:var(--accent)">
+          <span class="dot" style="background:var(--accent);margin-right:6px"></span>Remove key (omit password)
+        </span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><span class="kw">const</span> { <span class="param">password</span>, ...<span class="param">safeUser</span> } = user;
+<span class="cmt">// safeUser = { id, name, email, role, address }</span>
+<span class="cmt">// password gone — never send to client</span>
+
+<span class="cmt">// inline in function param:</span>
+<span class="kw">const</span> <span class="fn">send</span> = ({ <span class="param">password</span>, ...<span class="param">safeUser</span> }) <span class="op">=></span> safeUser;</pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-label" style="color:var(--accent2)">
+          <span class="dot" style="background:var(--accent2);margin-right:6px"></span>Rename while destructuring
+        </span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><span class="kw">const</span> {
+  name: <span class="param">userName</span>,
+  id: <span class="param">userId</span>
+} = user;
+<span class="cmt">// userName = 'Phani'</span>
+<span class="cmt">// userId  = 1</span></pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-label" style="color:var(--accent3)">
+          <span class="dot" style="background:var(--accent3);margin-right:6px"></span>Default values
+        </span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><span class="kw">const</span> { name, role = <span class="str">'viewer'</span> } = user;
+<span class="cmt">// if user.role is undefined → 'viewer'</span>
+<span class="cmt">// user has role='admin' so → 'admin'</span></pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-label" style="color:var(--accent4)">
+          <span class="dot" style="background:var(--accent4);margin-right:6px"></span>Rename + default combined
+        </span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><span class="kw">const</span> {
+  name: <span class="param">userName</span> = <span class="str">'Anonymous'</span>
+} = user;
+<span class="cmt">// userName = 'Phani' (default unused)</span>
+<span class="cmt">// if name missing → 'Anonymous'</span></pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-label" style="color:var(--accent)">
+          <span class="dot" style="background:var(--accent);margin-right:6px"></span>Nested destructuring
+        </span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><span class="kw">const</span> {
+  address: { <span class="param">city</span>, <span class="param">zip</span> }
+} = user;
+<span class="cmt">// city = 'Dallas', zip = '75001'</span>
+<span class="cmt">// address itself not in scope</span></pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-label" style="color:var(--accent2)">
+          <span class="dot" style="background:var(--accent2);margin-right:6px"></span>Merge objects (last wins)
+        </span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><span class="kw">const</span> defaults = { role: <span class="str">'viewer'</span>, active: <span class="kw">true</span> };
+<span class="kw">const</span> merged = { ...defaults, ...user };
+<span class="cmt">// user.role = 'admin' overrides defaults.role</span></pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-label" style="color:var(--accent3)">
+          <span class="dot" style="background:var(--accent3);margin-right:6px"></span>Array — skip index
+        </span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><span class="kw">const</span> [first, , third] = items;
+<span class="cmt">// first = 10, third = 30</span>
+<span class="cmt">// index 1 (20) skipped with empty comma</span></pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-label" style="color:var(--accent4)">
+          <span class="dot" style="background:var(--accent4);margin-right:6px"></span>Swap without temp var
+        </span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><span class="kw">let</span> a = <span class="num">1</span>, b = <span class="num">2</span>;
+[a, b] = [b, a];
+<span class="cmt">// a = 2, b = 1 ✅</span>
+<span class="cmt">// no temp variable needed</span></pre>
+    </div>
+
+    <div class="card wide">
+      <div class="card-header">
+        <span class="card-label" style="color:var(--accent)">
+          <span class="dot" style="background:var(--accent);margin-right:6px"></span>Destructure function params (React staple)
+        </span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><span class="cmt">// instead of props.name, props.role inside body</span>
+<span class="kw">const</span> <span class="fn">UserCard</span> = ({ name, role = <span class="str">'dev'</span>, address: { city } }) <span class="op">=></span> (
+  &lt;div&gt;{name} · {role} · {city}&lt;/div&gt;
+);
+
+<span class="cmt">// usage:</span>
+&lt;<span class="fn">UserCard</span> <span class="param">name</span>=<span class="str">"Phani"</span> <span class="param">address</span>={{ city: <span class="str">"Dallas"</span> }} /&gt;</pre>
+    </div>
+
+  </div>
+
+
+  <!-- WHAT INTERVIEWERS CALL THESE -->
+  <p class="section-title">What Interviewers Call These</p>
+
+  <div class="cards">
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-label" style="color:var(--accent4)">
+          <span class="dot" style="background:var(--accent4);margin-right:6px"></span>async useEffect pattern
+        </span>
+      </div>
+      <pre><span class="cmt">// "React Hooks side effects"</span>
+<span class="cmt">// "async/await in useEffect"</span>
+<span class="cmt">// Topics: cleanup functions,</span>
+<span class="cmt">// memory leaks, component lifecycle</span></pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-label" style="color:var(--accent)">
+          <span class="dot" style="background:var(--accent);margin-right:6px"></span>setItems with map/filter/spread
+        </span>
+      </div>
+      <pre><span class="cmt">// "Immutable state updates"</span>
+<span class="cmt">// Golden rule: never mutate</span>
+<span class="cmt">// always return new array/object</span></pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-label" style="color:var(--accent3)">
+          <span class="dot" style="background:var(--accent3);margin-right:6px"></span>...rest vs ...spread
+        </span>
+      </div>
+      <pre><span class="cmt">// REST — collects what's left</span>
+<span class="kw">const</span> { password, ...<span class="param">rest</span> } = user;
+
+<span class="cmt">// SPREAD — expands into new obj</span>
+{ ...<span class="param">item</span>, active: <span class="op">!</span><span class="param">item</span>.active }</pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-label" style="color:var(--accent2)">
+          <span class="dot" style="background:var(--accent2);margin-right:6px"></span>All destructuring tricks
+        </span>
+      </div>
+      <pre><span class="cmt">// "ES6 Destructuring Assignment"</span>
+<span class="cmt">// rename, defaults, nested,</span>
+<span class="cmt">// array skip, swap = all this</span></pre>
+    </div>
+
+    <div class="card wide">
+      <div class="card-header">
+        <span class="card-label" style="color:var(--accent)">
+          <span class="dot" style="background:var(--accent);margin-right:6px"></span>🎯 Umbrella term — what "strong JS fundamentals" actually means in interviews
+        </span>
+      </div>
+      <pre><span class="cmt">// "Modern JavaScript (ES6+) patterns in React"</span>
+<span class="cmt">// NOT testing framework trivia.</span>
+<span class="cmt">// Testing whether you know WHY things work the way they do.</span>
+<span class="cmt">// ↳ async behaviour + Promises</span>
+<span class="cmt">// ↳ immutability + referential equality</span>
+<span class="cmt">// ↳ spread / rest / destructuring in real scenarios</span></pre>
+    </div>
+
+  </div>
+
 </main>
 
 <footer>phani · personal dev notes · github pages</footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   function copyCode(btn) {
     const pre = btn.closest('.card').querySelector('pre');
     navigator.clipboard.writeText(pre.innerText).then(() => {
@@ -486,14 +699,4 @@
   }
 
   // Enter key support
-  document.getElementById('passInput').addEventListener('keydown', e => {
-    if (e.key === 'Enter') checkPass();
-  });
-
-  // Stay unlocked within same session
-  if (sessionStorage.getItem('unlocked') === '1') {
-    document.getElementById('gate').style.display = 'none';
-  }
-</script>
-</body>
-</html>
+  document.getElementById('passInput').addEventListener('keydown', e =
