@@ -699,4 +699,14 @@
   }
 
   // Enter key support
-  document.getElementById('passInput').addEventListener('keydown', e =
+  document.getElementById('passInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkPass();
+  });
+
+  // Stay unlocked within same session
+  if (sessionStorage.getItem('unlocked') === '1') {
+    document.getElementById('gate').style.display = 'none';
+  }
+</script>
+</body>
+</html>
